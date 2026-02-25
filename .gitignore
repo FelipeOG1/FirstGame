@@ -1,0 +1,24 @@
+build/
+bin/
+obj/
+
+*.exe
+*.out
+*.app
+d2_shooter
+mi_juego
+
+*.o
+*.a
+*.lib
+*.so
+*.dll
+*.dylib
+
+.vscode/
+.vs/
+.idea/
+cmake-build-*/
+
+*.log
+.DS_Store (Mac)
