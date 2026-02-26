@@ -1,62 +1,82 @@
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include <iostream>
-#include <string>
 
 
+struct SDLState {
+    SDL_Window* window;
+    SDL_Renderer* renderer;
+    
+};
 
-void draw_white_box(SDL_Renderer* renderer, SDL_Rect* rect) {
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); 
-    SDL_RenderFillRect(renderer, rect); 
-
-       
-}
+void cleanup(SDLState* state);
 
 int main(int argc, char* argv[]) {
+    SDLState state;
     
+    if (!SDL_Init(SDL_INIT_VIDEO)) {
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Error initial", nullptr);
     
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        std::cerr << "Failed to setup sdl";
+        return 1;
     }
-       
+    int w = 800;
+    int h = 600;
 
-    SDL_Window* window = SDL_CreateWindow(
-        "Hola mundo",
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        800, 600,
-        SDL_WINDOW_SHOWN
+    state.window = SDL_CreateWindow("demo", w, h, 0);
     
+    if (!state.window){
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Error creating window", nullptr);
+        cleanup(&state);
+        return 1;
         
-    );
 
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    }
+
     
+    state.renderer = SDL_CreateRenderer(state.window, nullptr);
+    
+    if (!state.renderer){
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Error creating renderer", nullptr);
+        cleanup(&state);
+        return 1;
+        
+    }
 
-    SDL_Event event;
+
+    
     bool running = true;
-
-    SDL_Rect rect = {100, 200, 50, 50};
-
     while (running) {
-
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                running = false; 
-            }
-        }
-
-        SDL_SetRenderDrawColor(renderer, 20, 20, 40, 255);
-        SDL_RenderClear(renderer);
-
-        draw_white_box(renderer, &rect);
         
-        SDL_RenderPresent(renderer);
+        SDL_Event e{ 0 };
+        
+        while (SDL_PollEvent(&e)) {
+            switch (e.type) {
+                case SDL_EVENT_QUIT:
+                {
+                    running = false;
+                    break;
+                }
+            
+            }           
+        }
+        
+        SDL_SetRenderDrawColor(state.renderer, 255, 255, 255, 255);
+        SDL_RenderClear(state.renderer);
+
+
+        SDL_RenderPresent(state.renderer);
+        
         
     }
-
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
     
+    cleanup(&state);   
     return 0;
+
+}
+
+
+void cleanup(SDLState* state ) {
+    
+    SDL_DestroyRenderer(state->renderer);
+    SDL_DestroyWindow(state->window);
+    SDL_Quit();
 }
