@@ -4,47 +4,21 @@
 struct SDLState {
     SDL_Window* window;
     SDL_Renderer* renderer;
+    int w, h, logW, logH;
     
 };
 
 void cleanup(SDLState* state);
+int init_state(SDLState* state);
+int show_error_and_exit(SDLState* state);
 
 
 int main(int argc, char* argv[]) {
+    
     SDLState state;
-    
-    if (!SDL_Init(SDL_INIT_VIDEO)) {
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Error initial", nullptr);
-    
-        return 1;
-    }
-    int w = 800;
-    int h = 600;
-
-    state.window = SDL_CreateWindow("demo", w, h, SDL_WINDOW_RESIZABLE);
-    
-    if (!state.window){
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Error creating window", nullptr);
-        cleanup(&state);
-        return 1;
-        
-
-    }
-
-    
-    state.renderer = SDL_CreateRenderer(state.window, nullptr);
-    
-    if (!state.renderer){
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Error creating renderer", nullptr);
-        cleanup(&state);
-        return 1;
+    if (init_state(&state) != 0) {
         
     }
-    int logW = 640;
-    int logH = 320;
-
-    SDL_SetRenderLogicalPresentation(state.renderer, logW, logH, SDL_LOGICAL_PRESENTATION_LETTERBOX);
-
     SDL_FRect dst {
         .x = 0,
         .y = 10,
@@ -55,6 +29,7 @@ int main(int argc, char* argv[]) {
     SDL_Texture* idltex = IMG_LoadTexture(state.renderer, "data/player-stand-1.png");
     SDL_SetTextureScaleMode(idltex, SDL_SCALEMODE_NEAREST);
     
+
     
     bool running = true;
     while (running) {
@@ -68,11 +43,15 @@ int main(int argc, char* argv[]) {
                     running = false;
                     break;
                 }
+                case SDL_EVENT_WINDOW_RESIZED:
+                {
+                    state.w = e.window.data1;
+                    state.h = e.window.data2;
+                    break;
+                }
             
             }           
         }
-
-
         
         // set backbuffer white 
         SDL_SetRenderDrawColor(state.renderer, 20, 10, 30, 255);
@@ -93,9 +72,47 @@ int main(int argc, char* argv[]) {
 }
 
 
+
+int init_state(SDLState* state) {
+    if (!SDL_Init(SDL_INIT_VIDEO)) {
+        show_error_and_exit(state);
+    }
+    
+    state->w = 1600;
+    state->h = 900;
+    
+    state->logW = 640;
+    state->logH = 320;
+
+    state->window = SDL_CreateWindow("demo", state->w, state->h, SDL_WINDOW_RESIZABLE);
+    
+    if (!state->window){
+        show_error_and_exit(state);
+
+    }
+
+    
+    state->renderer = SDL_CreateRenderer(state->window, nullptr);
+    
+    if (!state->renderer){
+        show_error_and_exit(state);
+    }
+
+    SDL_SetRenderLogicalPresentation(state->renderer, state->logW, state->logH, SDL_LOGICAL_PRESENTATION_LETTERBOX);
+
+    return 0;
+    
+}
 void cleanup(SDLState* state ) {
     
     SDL_DestroyRenderer(state->renderer);
     SDL_DestroyWindow(state->window);
     SDL_Quit();
+}
+
+int show_error_and_exit(SDLState* state) {
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Error creating renderer", nullptr);
+    cleanup(state);
+    return 1;
+
 }
