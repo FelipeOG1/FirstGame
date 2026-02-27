@@ -33,8 +33,8 @@ int main(int argc, char* argv[]) {
     
     while (running) {
         
-        uint64_t nowTime = SDL_GetTicks();
-        
+        uint64_t nowTime = SDL_GetTicks();  
+
         float deltaTime = (nowTime - prevTime) / 1000.0f; // convert to seconds
         
         SDL_Event e{ 0 };
@@ -122,7 +122,6 @@ int initState(SDLState* state) {
 
     }
 
-    
     state->renderer = SDL_CreateRenderer(state->window, nullptr);
     
     if (!state->renderer){
@@ -137,7 +136,6 @@ int initState(SDLState* state) {
 }
 
 void cleanup(SDLState* state ) {
-    
     SDL_DestroyRenderer(state->renderer);
     SDL_DestroyWindow(state->window);
     SDL_Quit();
