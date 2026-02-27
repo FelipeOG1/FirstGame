@@ -1,6 +1,6 @@
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
-#include <cstdlib>
+
 struct SDLState {
     SDL_Window* window;
     SDL_Renderer* renderer;
@@ -9,34 +9,34 @@ struct SDLState {
 };
 
 void cleanup(SDLState* state);
-int initState(SDLState* state);
+int init_state(SDLState* state);
 int show_error_and_exit(SDLState* state);
 
 
 int main(int argc, char* argv[]) {
     
     SDLState state;
-    initState(&state);
+        
         
     SDL_Texture* idltex = IMG_LoadTexture(state.renderer, "data/player-stand-1.png");
     SDL_SetTextureScaleMode(idltex, SDL_SCALEMODE_NEAREST);
 
     const bool* keys = SDL_GetKeyboardState(nullptr);
     
-    float playerX = 0;
+    float playerX = 150;
     float playerY = 0;
-    const float floor = state.logH;
-   
-    uint64_t prevTime = SDL_GetTicks();
+
+
+    SDL_FRect dst {
+        .x = playerX,
+        .y = playerY,
+        .w = 32,
+        .h = 32
+    };
 
     bool running = true;
-    
     while (running) {
-        
-        uint64_t nowTime = SDL_GetTicks();
-        
-        float deltaTime = (nowTime - prevTime) / 1000.0f; // convert to seconds
-        
+    
         SDL_Event e{ 0 };
         
         while (SDL_PollEvent(&e)) {
@@ -55,56 +55,28 @@ int main(int argc, char* argv[]) {
             
             }           
         }
-
-        //handle movement
-        float moveAmount = 0;
         
-        if (keys[SDL_SCANCODE_A]) {
-            moveAmount += -75.0f;
-        }
-        if (keys[SDL_SCANCODE_D]) {
-            moveAmount += 75.0f;
-            
-        }
-
-        playerX += moveAmount * deltaTime;
-
-              
         // set backbuffer white 
         SDL_SetRenderDrawColor(state.renderer, 20, 10, 30, 255);
         SDL_RenderClear(state.renderer);
-        
-        const float spriteSize = 32;
-   
-
-        SDL_FRect dst {
-        .x = playerX,
-        .y = floor - spriteSize,
-        .w = spriteSize,
-        .h = spriteSize
-        };
-
-
         SDL_RenderTexture(state.renderer, idltex, nullptr, &dst);
         
         // move back buffer to front 
         SDL_RenderPresent(state.renderer);
-
-        prevTime = nowTime;
         
         
     }
     SDL_DestroyTexture(idltex);
     cleanup(&state);   
 
-    
+
     return 0;
 
 }
 
 
 
-int initState(SDLState* state) {
+int init_state(SDLState* state) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         show_error_and_exit(state);
     }
@@ -146,6 +118,6 @@ void cleanup(SDLState* state ) {
 int show_error_and_exit(SDLState* state) {
     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", "Error creating renderer", nullptr);
     cleanup(state);
-    std::exit(1);
+    return 1;
 
 }
