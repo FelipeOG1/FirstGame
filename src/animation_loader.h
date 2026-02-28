@@ -1,3 +1,5 @@
+#pragma once
+
 #include <fstream>
 #include <vector>
 #include <nlohmann/json.hpp>
@@ -19,7 +21,8 @@ enum PlayerStates {
     HURTING, 
     RUNNING, 
     STANDING, 
-    COUNT };  
+    COUNT 
+};  
 
 class AnimationLoader {
     
