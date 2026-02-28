@@ -4,6 +4,12 @@
 #include <nlohmann/json.hpp>
 #include "animation.h"
 #include "animation_loader.h"
+
+
+
+
+// TODO: Add a map with state and sdl_texture* so each animation work with their own PNG.
+
 struct SDLState {
     SDL_Window* window;
     SDL_Renderer* renderer;
@@ -15,8 +21,6 @@ void cleanup(SDLState* state);
 int initState(SDLState* state);
 int show_error_and_exit(SDLState* state);
 
-
-
 struct Resources {
     std::map<int, std::vector<Frame>> playerAnimations;
     
@@ -25,9 +29,16 @@ struct Resources {
         playerAnimations = loader.getPlayerAnimations();
     }
 };
+
 int main(int argc, char* argv[]) {
     Resources res;
     res.loadAall();
+
+    std::map<int, Animation> playerAnims;
+    for (auto const& [state, frame] : res.playerAnimations) {
+        playerAnims[state] = Animation(frame.size(), 0.5f);
+        
+    }
 
     SDLState state;
     initState(&state);
@@ -47,14 +58,12 @@ int main(int argc, char* argv[]) {
     bool running = true;
 
     bool rotateCharacter = false;   
-    while (running) {
-        
+    int currentState = STANDING;
+    while (running) { 
         uint64_t nowTime = SDL_GetTicks();  
-
         float deltaTime = (nowTime - prevTime) / 1000.0f; // convert to seconds
-        
         SDL_Event e{ 0 };
-        
+
         while (SDL_PollEvent(&e)) {
             switch (e.type) {
                 case SDL_EVENT_QUIT:
@@ -72,17 +81,24 @@ int main(int argc, char* argv[]) {
             }           
         }
 
-        //handle movement
         float moveAmount = 0;
+        int nextState = STANDING;
         
         if (keys[SDL_SCANCODE_A]) {
-            moveAmount += -800.0f;
+            moveAmount += -70.0f;
             rotateCharacter = true;
+            nextState = RUNNING;
             
         }
         if (keys[SDL_SCANCODE_D]) {
-            moveAmount += 800.0f;
+            moveAmount += 70.0f;
             rotateCharacter = false;
+            nextState = RUNNING;
+        }
+
+        if (nextState != currentState) {
+            currentState = nextState;
+            playerAnims[currentState].timer.reset();
         }
 
         playerX += moveAmount * deltaTime;
@@ -92,25 +108,17 @@ int main(int argc, char* argv[]) {
         SDL_SetRenderDrawColor(state.renderer, 20, 10, 30, 255);
         SDL_RenderClear(state.renderer);
         
-        const float spriteSize = 50;
-   
+        playerAnims[currentState].step(deltaTime);
+        int frameIdx = playerAnims[currentState].currentFrame();
 
-        SDL_FRect dst {
-        .x = playerX,
-        .y = floor - (spriteSize - 10),
-        .w = spriteSize,
-        .h = spriteSize
-        };
+        Frame f = res.playerAnimations[currentState][frameIdx];
+        SDL_FRect src = { (float)f.x, (float)f.y, (float)f.w, (float)f.h };
+        SDL_FRect dst = { playerX, playerY, f.w * 2.0f, f.h * 2.0f };
 
-
-
-        SDL_RenderTextureRotated(state.renderer, idltex, nullptr, &dst, 0, nullptr, 
-            (rotateCharacter) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
-            
-        
+        SDL_FlipMode flip = rotateCharacter ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;       
+        SDL_RenderTextureRotated(state.renderer, idltex, &src, &dst, 0.0, nullptr, flip);
 
         SDL_RenderPresent(state.renderer);
-
         prevTime = nowTime;
         
         

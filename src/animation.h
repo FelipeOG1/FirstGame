@@ -13,7 +13,11 @@ public:
     float getLength() const { return timer.getLength(); }
 
     int currentFrame() {
-        return static_cast<int>((timer.getTime() / timer.getLength()) * frameCount);
+        if (frameCount == 0) return 0;
+        
+        int frame = static_cast<int>((timer.getTime() / timer.getLength()) * frameCount);
+        
+        return (frame >= frameCount) ? frameCount - 1 : frame;
     }
 
     void step (float deltaTime) {
