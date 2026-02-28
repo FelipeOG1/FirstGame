@@ -9,19 +9,14 @@ public:
     
     void step(float deltatime) {
         time += deltatime;
-        
+
         if (time >= length) {
             time -= length;
-            timeout = true;
-            
+            timeout = true;   
         }    
     }
-
     bool isTimeout() const { return timeout; }
     float getTime() const { return time; }
     float getLength() const { return length; }
     void reset() { time = 0; }
-
-
-
 };

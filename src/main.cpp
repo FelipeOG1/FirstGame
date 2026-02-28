@@ -2,7 +2,8 @@
 #include <SDL3_image/SDL_image.h>
 #include <cstdlib>
 #include <nlohmann/json.hpp>
-
+#include "animation.h"
+#include "animation_loader.h"
 struct SDLState {
     SDL_Window* window;
     SDL_Renderer* renderer;
@@ -14,8 +15,20 @@ void cleanup(SDLState* state);
 int initState(SDLState* state);
 int show_error_and_exit(SDLState* state);
 
-int main(int argc, char* argv[]) {
+
+
+struct Resources {
+    std::map<int, std::vector<Frame>> playerAnimations;
     
+    void loadAall() {
+        AnimationLoader loader;
+        playerAnimations = loader.getPlayerAnimations();
+    }
+};
+int main(int argc, char* argv[]) {
+    Resources res;
+    res.loadAall();
+
     SDLState state;
     initState(&state);
         
@@ -63,12 +76,12 @@ int main(int argc, char* argv[]) {
         float moveAmount = 0;
         
         if (keys[SDL_SCANCODE_A]) {
-            moveAmount += -75.0f;
+            moveAmount += -800.0f;
             rotateCharacter = true;
             
         }
         if (keys[SDL_SCANCODE_D]) {
-            moveAmount += 75.0f;
+            moveAmount += 800.0f;
             rotateCharacter = false;
         }
 

@@ -30,7 +30,7 @@ private:
     std::unordered_map<std::string, int> playerStringToState = {
         {"player_jumping.json", JUMPING},
         {"player_running.json", RUNNING}, 
-        {"player_hurting.json", HURTING},
+        {"player_shooting.json", SHOOTING},
         {"player_standing.json",STANDING}
     };
 
@@ -73,6 +73,7 @@ private:
                     
                     if (stringToState.count(fileName)) {
                         int current_animation = stringToState.at(fileName);
+                        std::cout << fileName << std::endl;
                         _loadCurrentAnimation(fullPath, entityAnimation, current_animation);
                     }
                 }
@@ -87,4 +88,5 @@ public:
         _loadDirAnimations("data/playerAnimations", playerStringToState, PlayerAnimations);
         return PlayerAnimations;
     }
+
 };
