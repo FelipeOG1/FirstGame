@@ -86,6 +86,7 @@ private:
 public:
     std::map<int, std::vector<Frame>> getPlayerAnimations() {
         _loadDirAnimations("data/playerAnimations", playerStringToState, PlayerAnimations);
+        std::cout << "se";
         return PlayerAnimations;
     }
 

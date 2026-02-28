@@ -35,10 +35,10 @@
 "meta": {
 	"app": "https://www.codeandweb.com/texturepacker",
 	"version": "1.0",
-	"image": "player_standing.json",
+	"image": "player_standing.png",
 	"format": "RGBA8888",
 	"size": {"w":320,"h":80},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:8389469cd6b2500399e8fc5563511ad6:05fe8e3cdb5c27b33eeddcb3ff6f1d52:0d8934d2cb5063e92230c6f18a37e6ff$"
+	"smartupdate": "$TexturePacker:SmartUpdate:363d6d6a4272ae668b15b17bc15e8d42:05fe8e3cdb5c27b33eeddcb3ff6f1d52:d7cb3b1087da3df636a9974335e38f62$"
 }
 }

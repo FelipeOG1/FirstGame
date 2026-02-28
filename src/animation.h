@@ -8,8 +8,7 @@ public:
 
 
     Animation() : timer(0), frameCount(0) {}
-    Animation(int framecount, int lenght) : frameCount(frameCount), timer(lenght) {}
-
+    Animation(int count, float len) : frameCount(count), timer(len) {}
     float getLength() const { return timer.getLength(); }
 
     int currentFrame() {
