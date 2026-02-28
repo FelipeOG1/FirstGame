@@ -1,8 +1,28 @@
+<DIRECTIONS>
+agrega sdl texture pointer como param
+</DIRECTIONS>
+<Context>
+You receive a selection in neovim that you need to replace with new code.
+The selection's contents may contain notes, incorporate the notes every time if there are some.
+consider the context of the selection and what you are suppose to be implementing
+<SELECTION_LOCATION>
+range(point(151,1),point(159,2))
+</SELECTION_LOCATION>
+<SELECTION_CONTENT>
+
+void flip_character(SDLState *state, SDL_FRect *src, SDL_FRect *dst) {
+    
+}
+
+
+void render_character(SDLState *state, SDL_FRect *src, SDL_FRect *dst) {
+    
+}
+</SELECTION_CONTENT>
+<FILE_CONTAINING_SELECTION>
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <cstdlib>
-#include <nlohmann/json.hpp>
-
 struct SDLState {
     SDL_Window* window;
     SDL_Renderer* renderer;
@@ -13,6 +33,8 @@ struct SDLState {
 void cleanup(SDLState* state);
 int initState(SDLState* state);
 int show_error_and_exit(SDLState* state);
+void flip_character(SDLState *state, SDL_FRect *src, SDL_FRect *dst);
+void render_character(SDLState *state, SDL_FRect *src, SDL_FRect *dst);
 
 int main(int argc, char* argv[]) {
     
@@ -32,8 +54,7 @@ int main(int argc, char* argv[]) {
     uint64_t prevTime = SDL_GetTicks();
 
     bool running = true;
-
-    bool rotateCharacter = false;   
+    
     while (running) {
         
         uint64_t nowTime = SDL_GetTicks();  
@@ -64,12 +85,10 @@ int main(int argc, char* argv[]) {
         
         if (keys[SDL_SCANCODE_A]) {
             moveAmount += -75.0f;
-            rotateCharacter = true;
-            
         }
         if (keys[SDL_SCANCODE_D]) {
             moveAmount += 75.0f;
-            rotateCharacter = false;
+            
         }
 
         playerX += moveAmount * deltaTime;
@@ -89,13 +108,8 @@ int main(int argc, char* argv[]) {
         .h = spriteSize
         };
 
-
-
-        SDL_RenderTextureRotated(state.renderer, idltex, nullptr, &dst, 0, nullptr, 
-            (rotateCharacter) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
-            
         
-
+        SDL_RenderTextureRotated(state.renderer, idltex, nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
         SDL_RenderPresent(state.renderer);
 
         prevTime = nowTime;
@@ -157,3 +171,37 @@ int show_error_and_exit(SDLState* state) {
 }
 
 
+void flip_character(SDLState *state, SDL_FRect *src, SDL_FRect *dst) {
+    
+}
+
+
+void render_character(SDLState *state, SDL_FRect *src, SDL_FRect *dst) {
+    
+}
+</FILE_CONTAINING_SELECTION>
+
+</Context>
+
+<Location><File>/home/felipe/cpp_projects/2d_game/src/main.cpp</File><Function>range(point(151,1),point(159,2))</Function></Location>
+<FunctionText>
+void flip_character(SDLState *state, SDL_FRect *src, SDL_FRect *dst) {
+    
+}
+
+
+void render_character(SDLState *state, SDL_FRect *src, SDL_FRect *dst) {
+    
+}</FunctionText>
+<MustObey>
+NEVER alter any file other than TEMP_FILE.
+never provide the requested changes as conversational output. Return only the code.
+ONLY provide requested changes by writing the change to TEMP_FILE
+
+never attempt to read TEMP_FILE.
+It is purely for output.
+Previous contents, which may not exist, can be written over without worry
+After writing TEMP_FILE once you should be done.  Be done and end the session.
+
+</MustObey>
+<TEMP_FILE>./tmp/99-5901</TEMP_FILE>
