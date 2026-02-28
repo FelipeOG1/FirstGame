@@ -20,5 +20,6 @@ mi_juego
 .idea/
 cmake-build-*/
 
+tmp
 *.log
 .DS_Store (Mac)

@@ -1,2 +1,0 @@
-void flip_character(SDLState *state, SDL_FRect *src, SDL_FRect *dst);
-void render_character(SDLState *state, SDL_FRect *src, SDL_FRect *dst);
