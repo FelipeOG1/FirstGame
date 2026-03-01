@@ -3,24 +3,34 @@
 #include <fstream>
 #include <vector>
 #include <string>
-#include <map>
 #include <unordered_map>
 #include <filesystem>
-#include <nlohmann/json.hpp> 
+#include <nlohmann/json.hpp>
 #include "types.h"
-
+#include "animation.h"
 
 namespace fs = std::filesystem;
 using json = nlohmann::json;
 
-class AnimationFramesLoader {
+class AnimationLoader {
 private:
-    void _loadCurrentAnimation(const std::string &path, 
-                               std::map<int, std::vector<Frame>> &entityAnimation, 
-                               int stateKey) {
-        std::ifstream file(path);
+
+    void _loadAnimationSpriteSheet(
+        std::unordered_map<Action, Animation>& outAnimationMap,
+        const fs::path& basePath,
+        Action currentAction)
+    {
+        outAnimationMap[currentAction].spreedSheetPath = basePath.string();
+    }
+
+    void _loadAnimationFrames(
+        std::unordered_map<Action, Animation>& outAnimationMap,
+        const fs::path& basePath,
+        Action currentAction)
+    {
+        std::ifstream file(basePath);
         if (!file.is_open()) {
-            std::cerr << "Error: No se pudo abrir " << path << std::endl;
+            std::cerr << "Error: No se pudo abrir " << basePath << std::endl;
             return;
         }
 
@@ -28,27 +38,27 @@ private:
         file >> data;
 
         std::vector<Frame> frames;
-        // Optimizamos reservando memoria de antemano
         frames.reserve(data["frames"].size());
 
         for (auto& f : data["frames"]) {
-            Frame currentFrame;
-            currentFrame.x = f["frame"]["x"];
-            currentFrame.y = f["frame"]["y"];
-            currentFrame.w = f["frame"]["w"];
-            currentFrame.h = f["frame"]["h"];
-            
-            frames.push_back(currentFrame);
+            Frame frame;
+            frame.x = f["frame"]["x"];
+            frame.y = f["frame"]["y"];
+            frame.w = f["frame"]["w"];
+            frame.h = f["frame"]["h"];
+            frames.push_back(frame);
         }
 
-        entityAnimation[stateKey] = std::move(frames);
+        outAnimationMap[currentAction].frames = std::move(frames);
     }
 
 public:
-    void loadAnimations(const std::string &dirPath, 
-                        const std::unordered_map<std::string, int> &configMap, 
-                        std::map<int, std::vector<Frame>> &outAnimationMap) {
-        
+
+    void loadAnimations(
+        const std::string& dirPath,
+        const std::unordered_map<std::string, Action>& configMap,
+        std::unordered_map<Action, Animation>& outAnimationMap)
+    {
         try {
             if (!fs::exists(dirPath) || !fs::is_directory(dirPath)) {
                 std::cerr << "Directorio no encontrado: " << dirPath << std::endl;
@@ -56,14 +66,23 @@ public:
             }
 
             for (const auto& entry : fs::directory_iterator(dirPath)) {
-                std::string fileName = entry.path().filename().string();
-                
-                if (configMap.count(fileName)) {
-                    int state = configMap.at(fileName);
-                    std::cout << "Cargando estado " << state << " desde: " << fileName << std::endl;
-                    _loadCurrentAnimation(entry.path().string(), outAnimationMap, state);
+
+                std::string stem = entry.path().stem().string();
+
+                if (!configMap.count(stem))
+                    continue;
+
+                Action action = configMap.at(stem);
+                auto ext = entry.path().extension();
+
+                if (ext == ".png") {
+                    _loadAnimationSpriteSheet(outAnimationMap, entry.path(), action);
+                }
+                else if (ext == ".json") {
+                    _loadAnimationFrames(outAnimationMap, entry.path(), action);
                 }
             }
+
         } catch (const fs::filesystem_error& e) {
             std::cerr << "Error de filesystem: " << e.what() << std::endl;
         }
