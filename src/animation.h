@@ -10,14 +10,14 @@ public:
     Timer timer;
     int frameCount;
     std::string spreedSheetPath;
-    std::map<int, std::vector<Frame>>* frames = nullptr; 
-
+    std::vector<Frame> frames;
+    
     Animation() : timer(0), frameCount(0) {}
     Animation(int count, 
               float len, 
               std::string spreedSheetPath, 
               std::map<int, std::vector<Frame>> &framesRef) 
-            : frameCount(count), timer(len), spreedSheetPath(spreedSheetPath),frames(&framesRef)
+            : frameCount(count), timer(len), spreedSheetPath(spreedSheetPath)
         {}
 
     
@@ -50,6 +50,8 @@ public:
         
         
     }
+
+    
 
 };
 
