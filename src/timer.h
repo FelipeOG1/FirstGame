@@ -2,21 +2,40 @@
 
 class Timer {
 
-    float length, time;
-    bool timeout;
-public:
-    Timer(float lenght) : length(lenght), time(0), timeout(false) {}
-    
-    void step(float deltatime) {
-        time += deltatime;
+    float length = 0.f;
+    float time = 0.f;
+    bool timeout = false;
 
-        if (time >= length) {
-            time -= length;
-            timeout = true;   
-        }    
+public:
+
+    Timer() = default;
+
+    Timer(float len)
+        : length(len), time(0.f), timeout(false)
+    {}
+
+    void step(float deltaTime) {
+        timeout = false;
+
+        time += deltaTime;
+
+        if (time >= length && length > 0.f) {
+            time -= length;     
+            timeout = true;
+        }
     }
-    bool isTimeout() const { return timeout; }
+
+    void reset() {
+        time = 0.f;
+        timeout = false;
+    }
+
     float getTime() const { return time; }
     float getLength() const { return length; }
-    void reset() { time = 0; }
+    bool isTimeout() const { return timeout; }
+
+    void setLength(float len) {
+        length = len;
+        reset();
+    }
 };

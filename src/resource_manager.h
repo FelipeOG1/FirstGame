@@ -9,25 +9,28 @@ class ResourceManager {
 private:
 
     std::unordered_map<std::string, Action> playerConfigMap = {
-        {"standing", Action::IDLE},
-        {"running",  Action::MOVE},
+        {"player_run_shot", Action::ATTACK},
+        {"player_run",  Action::MOVE},
+        {"player_idle", Action::IDLE}
     };
 
     std::unordered_map<Action, Animation> playerAnimations;
 
 public:
-
-    void loadPlayerResources() {
+    void loadPlayerResources(SDL_Renderer *renderer) {
         AnimationLoader loader;
         loader.loadAnimations(
             "data/playerAnimations",
             playerConfigMap,
             playerAnimations
         );
+
+        for (auto& [action, animation]: playerAnimations) {
+            animation.loadTexture(renderer);
+        }
     }
 
-    const std::unordered_map<Action, Animation>& 
-    getPlayerAnimations() const {
+    const std::unordered_map<Action, Animation>&getPlayerAnimations() const {
         return playerAnimations;
     }
 };

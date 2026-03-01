@@ -4,8 +4,8 @@
 #include <nlohmann/json.hpp>
 #include "animation.h"
 #include "types.h"
-
-// TODO: Add a map with state and sdl_texture* png so each animation work with their own PNG.
+#include "resource_manager.h"
+#include "player.h"
 
 struct SDLState {
     SDL_Window* window;
@@ -18,75 +18,46 @@ void cleanup(SDLState* state);
 int initState(SDLState* state);
 int show_error_and_exit(SDLState* state);
 
-struct Resources {
-    std::map<int, std::vector<Frame>> playerAnimations;
-    
-    void loadAall() {
-        AnimationFramesLoader loader;
-        playerAnimations = loader.getPlayerAnimations();
-    }
-};
-
-
 int main(int argc, char* argv[]) {
-    Resources res;
-    res.loadAall();
 
-    std::map<int, Animation> playerAnims;
-    for (auto const& [state, frame] : res.playerAnimations) {
-        playerAnims[state] = Animation(frame.size(), 0.8f);
-    }
-
-    SDLState state;
+    SDLState state;   
     initState(&state);
-        
-    SDL_Texture* idltex = IMG_LoadTexture(state.renderer, "data/playerAnimations/player_standing.png");
-    if (!idltex) {
-        SDL_Log("No se pudo cargar la imagen: %s", SDL_GetError());
-        return 1;
-    }
-    SDL_SetTextureScaleMode(idltex, SDL_SCALEMODE_NEAREST);
+    ResourceManager resourceManager;
+    resourceManager.loadPlayerResources(state.renderer);
+    Player robot(resourceManager.getPlayerAnimations());
+    
 
+    
     uint64_t prevTime = SDL_GetTicks();
     bool running = true;
-    int currentState = STANDING; // Forzado a STANDING
 
-    while (running) { 
-        uint64_t nowTime = SDL_GetTicks();  
-        float deltaTime = (nowTime - prevTime) / 1000.0f; 
-        
+    while (running) {
+        uint64_t currTime = SDL_GetTicks();
+
+        float deltaTime = (currTime - prevTime) / 1000.0f;
+
         SDL_Event e;
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_EVENT_QUIT) running = false;
         }
 
-        playerAnims[currentState].step(deltaTime);
-        
-        int frameIdx = playerAnims[currentState].currentFrame();
-        
-        if (res.playerAnimations[currentState].empty()) {
-            SDL_Log("Error: El vector de frames para STANDING está vacío.");
-            break;
-        }
+        robot.update(deltaTime);
 
-        Frame f = res.playerAnimations[currentState][frameIdx];
-
+        std::cout << robot.getCurrentFrame().x;
         SDL_SetRenderDrawColor(state.renderer, 20, 10, 30, 255);
         SDL_RenderClear(state.renderer);
-
-        SDL_FRect src = { (float)f.x, (float)f.y, (float)f.w, (float)f.h };
-        SDL_FRect dst = { 320.0f - f.w, 160.0f - f.h, f.w * 2.0f, f.h * 2.0f };
-
-        SDL_RenderTextureRotated(state.renderer, idltex, &src, &dst, 0.0, nullptr, SDL_FLIP_NONE);
-
+        robot.draw(state.renderer);
         SDL_RenderPresent(state.renderer);
         
-        prevTime = nowTime;
-    }
+        prevTime = currTime;
 
-    SDL_DestroyTexture(idltex);
-    cleanup(&state);   
+
+    }
+    
     return 0;
+    
+
+
 }
 
 int initState(SDLState* state) {
