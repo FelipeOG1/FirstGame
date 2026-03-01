@@ -52,8 +52,9 @@ public:
         return timer.isTimeout();
     }
 
-    void logTexture() const {
-        cout << animation->
+    SDL_Texture *currentTexture() const {
+        return animation->getTexture();
     }
+
     
 };
