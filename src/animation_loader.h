@@ -20,7 +20,7 @@ private:
         const fs::path& basePath,
         Action currentAction)
     {
-        outAnimationMap[currentAction].spreedSheetPath = basePath.string();
+        outAnimationMap[currentAction].spriteSheetPath = basePath.string();
     }
 
     void _loadAnimationFrames(
@@ -71,7 +71,8 @@ public:
 
                 if (!configMap.count(stem))
                     continue;
-
+                std::cout << "loading action" << stem <<std::endl;
+                
                 Action action = configMap.at(stem);
                 auto ext = entry.path().extension();
 
