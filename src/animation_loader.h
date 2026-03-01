@@ -21,6 +21,7 @@ private:
         Action currentAction)
     {
         outAnimationMap[currentAction].spriteSheetPath = basePath.string();
+        
     }
 
     void _loadAnimationFrames(
