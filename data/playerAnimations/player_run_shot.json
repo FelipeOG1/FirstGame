@@ -1,7 +1,7 @@
 {"frames": [
 
 {
-	"filename": "player-run-1.png",
+	"filename": "player-run-shot-1.png",
 	"frame": {"x":0,"y":0,"w":80,"h":80},
 	"rotated": false,
 	"trimmed": false,
@@ -9,7 +9,7 @@
 	"sourceSize": {"w":80,"h":80}
 },
 {
-	"filename": "player-run-2.png",
+	"filename": "player-run-shot-2.png",
 	"frame": {"x":80,"y":0,"w":80,"h":80},
 	"rotated": false,
 	"trimmed": false,
@@ -17,7 +17,7 @@
 	"sourceSize": {"w":80,"h":80}
 },
 {
-	"filename": "player-run-3.png",
+	"filename": "player-run-shot-3.png",
 	"frame": {"x":160,"y":0,"w":80,"h":80},
 	"rotated": false,
 	"trimmed": false,
@@ -25,7 +25,7 @@
 	"sourceSize": {"w":80,"h":80}
 },
 {
-	"filename": "player-run-4.png",
+	"filename": "player-run-shot-4.png",
 	"frame": {"x":240,"y":0,"w":80,"h":80},
 	"rotated": false,
 	"trimmed": false,
@@ -33,7 +33,7 @@
 	"sourceSize": {"w":80,"h":80}
 },
 {
-	"filename": "player-run-5.png",
+	"filename": "player-run-shot-5.png",
 	"frame": {"x":320,"y":0,"w":80,"h":80},
 	"rotated": false,
 	"trimmed": false,
@@ -41,7 +41,7 @@
 	"sourceSize": {"w":80,"h":80}
 },
 {
-	"filename": "player-run-6.png",
+	"filename": "player-run-shot-6.png",
 	"frame": {"x":400,"y":0,"w":80,"h":80},
 	"rotated": false,
 	"trimmed": false,
@@ -49,7 +49,7 @@
 	"sourceSize": {"w":80,"h":80}
 },
 {
-	"filename": "player-run-7.png",
+	"filename": "player-run-shot-7.png",
 	"frame": {"x":480,"y":0,"w":80,"h":80},
 	"rotated": false,
 	"trimmed": false,
@@ -57,7 +57,7 @@
 	"sourceSize": {"w":80,"h":80}
 },
 {
-	"filename": "player-run-8.png",
+	"filename": "player-run-shot-8.png",
 	"frame": {"x":560,"y":0,"w":80,"h":80},
 	"rotated": false,
 	"trimmed": false,
@@ -65,7 +65,7 @@
 	"sourceSize": {"w":80,"h":80}
 },
 {
-	"filename": "player-run-9.png",
+	"filename": "player-run-shot-9.png",
 	"frame": {"x":640,"y":0,"w":80,"h":80},
 	"rotated": false,
 	"trimmed": false,
@@ -73,7 +73,7 @@
 	"sourceSize": {"w":80,"h":80}
 },
 {
-	"filename": "player-run-10.png",
+	"filename": "player-run-shot-10.png",
 	"frame": {"x":720,"y":0,"w":80,"h":80},
 	"rotated": false,
 	"trimmed": false,
@@ -83,10 +83,10 @@
 "meta": {
 	"app": "https://www.codeandweb.com/texturepacker",
 	"version": "1.0",
-	"image": "player_running.json",
+	"image": "player_run_shot.png",
 	"format": "RGBA8888",
 	"size": {"w":800,"h":80},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:238e0353e8710cfc2538f087d20791d3:7a96123bdb474d7b150b92c7665c2080:ca8a9cb16d89d6f125749eee05e74450$"
+	"smartupdate": "$TexturePacker:SmartUpdate:26ebe860c031c3c89c82f3a36b922e51:2e9c47bb0bfb0f6f5779fbab01abda9d:85abdb4c60c7c808783100e7be6f8d49$"
 }
 }
