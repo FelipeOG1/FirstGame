@@ -3,12 +3,9 @@
 #include <cstdlib>
 #include <nlohmann/json.hpp>
 #include "animation.h"
-#include "animation_loader.h"
+#include "types.h"
 
-
-
-
-// TODO: Add a map with state and sdl_texture* so each animation work with their own PNG.
+// TODO: Add a map with state and sdl_texture* png so each animation work with their own PNG.
 
 struct SDLState {
     SDL_Window* window;
@@ -25,7 +22,7 @@ struct Resources {
     std::map<int, std::vector<Frame>> playerAnimations;
     
     void loadAall() {
-        AnimationLoader loader;
+        AnimationFramesLoader loader;
         playerAnimations = loader.getPlayerAnimations();
     }
 };
@@ -77,7 +74,6 @@ int main(int argc, char* argv[]) {
         SDL_SetRenderDrawColor(state.renderer, 20, 10, 30, 255);
         SDL_RenderClear(state.renderer);
 
-        // Centramos al robot en la pantalla lógica (640x320)
         SDL_FRect src = { (float)f.x, (float)f.y, (float)f.w, (float)f.h };
         SDL_FRect dst = { 320.0f - f.w, 160.0f - f.h, f.w * 2.0f, f.h * 2.0f };
 

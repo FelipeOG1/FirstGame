@@ -1,57 +1,38 @@
 #pragma once
-
+#include <iostream>
 #include <fstream>
 #include <vector>
-#include <nlohmann/json.hpp>
+#include <string>
 #include <map>
-#include <filesystem>
 #include <unordered_map>
-#include <iostream>
+#include <filesystem>
+#include <nlohmann/json.hpp> 
+#include "types.h"
 
-using json = nlohmann::json;
+
 namespace fs = std::filesystem;
+using json = nlohmann::json;
 
-struct Frame {
-    int x, y, w, h;
-};
-
-enum PlayerStates { 
-    SHOOTING, 
-    JUMPING, 
-    HURTING, 
-    RUNNING, 
-    STANDING, 
-    COUNT 
-};  
-
-class AnimationLoader {
-    
+class AnimationFramesLoader {
 private:
-    std::unordered_map<std::string, int> playerStringToState = {
-        {"player_jumping.json", JUMPING},
-        {"player_running.json", RUNNING}, 
-        {"player_shooting.json", SHOOTING},
-        {"player_standing.json",STANDING}
-    };
-
-    std::map<int, std::vector<Frame>> PlayerAnimations;
-   
-    void _loadCurrentAnimation(const std::string &path, std::map<int, std::vector<Frame>> &entityAnimation, int currentAnimation) {
+    void _loadCurrentAnimation(const std::string &path, 
+                               std::map<int, std::vector<Frame>> &entityAnimation, 
+                               int stateKey) {
         std::ifstream file(path);
-        
         if (!file.is_open()) {
-            std::cerr << "No se pudo abrir el archivo: " << path << std::endl;
+            std::cerr << "Error: No se pudo abrir " << path << std::endl;
             return;
         }
-        
+
         json data;
         file >> data;
-        
+
         std::vector<Frame> frames;
-        
-        for (size_t i = 0; i < data["frames"].size(); i++) {
+        // Optimizamos reservando memoria de antemano
+        frames.reserve(data["frames"].size());
+
+        for (auto& f : data["frames"]) {
             Frame currentFrame;
-            auto& f = data["frames"][i];
             currentFrame.x = f["frame"]["x"];
             currentFrame.y = f["frame"]["y"];
             currentFrame.w = f["frame"]["w"];
@@ -59,35 +40,32 @@ private:
             
             frames.push_back(currentFrame);
         }
-    
-        entityAnimation[currentAnimation] = frames;
+
+        entityAnimation[stateKey] = std::move(frames);
     }
-    void _loadDirAnimations(const std::string &dirName, const std::unordered_map<std::string, int> &stringToState, std::map<int, std::vector<Frame>> &entityAnimation) {
+
+public:
+    void loadAnimations(const std::string &dirPath, 
+                        const std::unordered_map<std::string, int> &configMap, 
+                        std::map<int, std::vector<Frame>> &outAnimationMap) {
         
         try {
-            if (fs::exists(dirName) && fs::is_directory(dirName)) {
-                for (const auto& entry : fs::directory_iterator(dirName)) {
-                    
-                    std::string fileName = entry.path().filename().string();
-                    std::string fullPath = entry.path().string();
-                    
-                    if (stringToState.count(fileName)) {
-                        int current_animation = stringToState.at(fileName);
-                        std::cout << fileName << std::endl;
-                        _loadCurrentAnimation(fullPath, entityAnimation, current_animation);
-                    }
+            if (!fs::exists(dirPath) || !fs::is_directory(dirPath)) {
+                std::cerr << "Directorio no encontrado: " << dirPath << std::endl;
+                return;
+            }
+
+            for (const auto& entry : fs::directory_iterator(dirPath)) {
+                std::string fileName = entry.path().filename().string();
+                
+                if (configMap.count(fileName)) {
+                    int state = configMap.at(fileName);
+                    std::cout << "Cargando estado " << state << " desde: " << fileName << std::endl;
+                    _loadCurrentAnimation(entry.path().string(), outAnimationMap, state);
                 }
             }
         } catch (const fs::filesystem_error& e) {
             std::cerr << "Error de filesystem: " << e.what() << std::endl;
         }
     }
-
-public:
-    std::map<int, std::vector<Frame>> getPlayerAnimations() {
-        _loadDirAnimations("data/playerAnimations", playerStringToState, PlayerAnimations);
-        std::cout << "se";
-        return PlayerAnimations;
-    }
-
 };
