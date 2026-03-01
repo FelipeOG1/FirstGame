@@ -10,7 +10,7 @@ private:
     SDL_Texture* texture = nullptr;
 
 public:
-    float duration = 0.f;
+    float duration = 1.0f;
     std::string spriteSheetPath;
     std::vector<Frame> frames;
     Animation() = default;
@@ -26,9 +26,14 @@ public:
 
     void loadTexture(SDL_Renderer *renderer) {
         texture = IMG_LoadTexture(renderer, spriteSheetPath.c_str());
+        SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
     }
 
-    
+    SDL_Texture* getTexture() const {
+        return texture;
+    }
+
+   
 
     ~Animation() {
         if (texture) SDL_DestroyTexture(texture);
