@@ -87,7 +87,7 @@ public:
 
 
     void MoveRight(float deltaTime) {
-        setAction(Action::ATTACK);
+        setAction(Action::MOVE);
         facingLeft = false;
         x += velocity * deltaTime;
     }
@@ -97,6 +97,13 @@ public:
         setAction(Action::MOVE);
         facingLeft = true;
         x -= velocity * deltatime;
+
+    }
+
+    void jump(float deltatime) {
+        setAction(Action::JUMP);
+        
+        y -= velocity * deltatime;
 
     }
 

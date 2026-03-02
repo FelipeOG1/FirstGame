@@ -11,7 +11,8 @@ private:
     std::unordered_map<std::string, Action> playerConfigMap = {
         {"player_run_shot", Action::ATTACK},
         {"player_run",  Action::MOVE},
-        {"player_idle", Action::IDLE}
+        {"player_idle", Action::IDLE},
+        {"player_jump", Action::JUMP}
     };
 
     std::unordered_map<Action, Animation> playerAnimations;

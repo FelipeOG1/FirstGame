@@ -54,18 +54,21 @@ int main(int argc, char* argv[]) {
 
         }
 
+        
+
         if (key_states[SDL_SCANCODE_D]) {
             robot.MoveRight(deltaTime);
         }
 
-        else if (key_states[SDL_SCANCODE_A]) {
+        if (key_states[SDL_SCANCODE_A]) {
             robot.MoveLeft(deltaTime);
-        }else {
-            robot.setAction(Action::IDLE);
+        }
+
+        if (key_states[SDL_SCANCODE_SPACE]) {
+            robot.jump(deltaTime);
         }
         
-
-
+        
         SDL_SetRenderDrawColor(state.renderer, 20, 10, 30, 255);
         SDL_RenderClear(state.renderer);
         robot.draw(state.renderer);

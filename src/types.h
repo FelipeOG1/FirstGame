@@ -8,5 +8,6 @@ enum class Action {
     IDLE,
     MOVE,
     ATTACK,
-    HURT
+    HURT,
+    JUMP
 };
