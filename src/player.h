@@ -12,12 +12,20 @@ private:
     const std::unordered_map<Action, Animation>& animations;
     AnimationInstance currentAnimation;
     Action currentAction = Action::IDLE;
+    bool facingLeft = false;
+    float x = 0.0;
+    float y = 0.0;
+    
+    float w = 100.0;
+    float h = 100.0;
+    
 public:
 
-    float x, y;
+    
+    const float velocity = 200.0;
 
     Player(const std::unordered_map<Action, Animation>& anims)
-        : animations(anims) , x(0.0f), y(0.0f)
+        : animations(anims)
     {
         if (!animations.count(Action::IDLE))
             throw std::runtime_error("Falta animación IDLE");
@@ -36,6 +44,11 @@ public:
             currentAnimation.setAnimation(&animations.at(currentAction));
         }
     }
+    void setStartingPosition(float x, float y) {
+        this->x = x;
+        this->y = y;
+    }
+
 
     void update(float deltaTime) {
         currentAnimation.step(deltaTime);
@@ -53,6 +66,7 @@ public:
         return currentAction;
     }
 
+   
     void draw(SDL_Renderer *renderer) {
         const Frame& f = getCurrentFrame();
         SDL_Texture* tex = currentAnimation.currentTexture();
@@ -63,11 +77,32 @@ public:
         SDL_FRect dst = { 
         this->x,          
         this->y,                  
-        f.w * 2.0f, 
-        f.h * 2.0f 
+        this->w, 
+        this->h
         };
-        SDL_RenderTexture(renderer, tex, &src, &dst);
+
+        SDL_FlipMode flip = facingLeft ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+        SDL_RenderTextureRotated(renderer, tex, &src, &dst, 0.0, nullptr, flip);
     };
+
+
+    void MoveRight(float deltaTime) {
+        setAction(Action::ATTACK);
+        facingLeft = false;
+        x += velocity * deltaTime;
+    }
+
+   
+    void MoveLeft(float deltatime) {
+        setAction(Action::MOVE);
+        facingLeft = true;
+        x -= velocity * deltatime;
+
+    }
+
+
+    float getHeight() const { return h; }
+        
          
     };
 

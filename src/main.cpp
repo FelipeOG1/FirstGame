@@ -31,19 +31,41 @@ int main(int argc, char* argv[]) {
     uint64_t prevTime = SDL_GetTicks();
     bool running = true;
 
+    const bool *key_states = SDL_GetKeyboardState(nullptr);
+    
+    robot.setStartingPosition(0, state.logH - robot.getHeight());
+    
     while (running) {
         uint64_t currTime = SDL_GetTicks();
 
         float deltaTime = (currTime - prevTime) / 1000.0f;
 
-        SDL_Event e;
-        while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_EVENT_QUIT) running = false;
-        }
-
         robot.update(deltaTime);
 
-        std::cout << robot.getCurrentFrame().x;
+        SDL_Event e { 0 };
+        while (SDL_PollEvent(&e)) {
+
+            
+            if (e.type == SDL_EVENT_QUIT) running = false;
+            if (e.type == SDL_EVENT_WINDOW_RESIZED) {
+                state.w = e.window.data1;
+                state.h = e.window.data2;
+            }
+
+        }
+
+        if (key_states[SDL_SCANCODE_D]) {
+            robot.MoveRight(deltaTime);
+        }
+
+        else if (key_states[SDL_SCANCODE_A]) {
+            robot.MoveLeft(deltaTime);
+        }else {
+            robot.setAction(Action::IDLE);
+        }
+        
+
+
         SDL_SetRenderDrawColor(state.renderer, 20, 10, 30, 255);
         SDL_RenderClear(state.renderer);
         robot.draw(state.renderer);

@@ -33,7 +33,6 @@ public:
         return texture;
     }
 
-   
 
     ~Animation() {
         if (texture) SDL_DestroyTexture(texture);
