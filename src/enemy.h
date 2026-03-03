@@ -9,10 +9,11 @@ public:
         : GameObject(anims) 
     {
         this->position = glm::vec2(100.0f, 30.0f); 
-        this->size = glm::vec2(100.0f, 100.0f );     
+        this->size = glm::vec2(10.0f, 10.0f );     
         this->velocity = glm::vec2(200.0f, 0.0f);      
+        this->scale = 0.5f;
     }
-       };
+    };
 
     
     

@@ -28,10 +28,6 @@ int main(int argc, char* argv[]) {
     resourceManager.loadEnemyResources(state.renderer);
     Player robot(resourceManager.getPlayerAnimations());
     Enemy spider(resourceManager.getEnemyAnimations());
-    std::cout << spider.getCurrentSpriteSheet() << std::endl;
-    spider.setAction(Action::ATTACK);
-    std::cout << spider.getCurrentSpriteSheet() << std::endl;
-
     uint64_t prevTime = SDL_GetTicks();
     bool running = true;
 
@@ -71,8 +67,6 @@ int main(int argc, char* argv[]) {
     }
     
     return 0;
-    
-
 
 }
 

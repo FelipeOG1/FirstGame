@@ -10,7 +10,9 @@ public:
     {
         this->position = glm::vec2(0.0f, 0.0f); 
         this->size = glm::vec2(100.0f, 100.0f );     
-        this->velocity = glm::vec2(200.0f, 0.0f);      }
+        this->velocity = glm::vec2(200.0f, 0.0f);      
+        this->scale = 1.3;
+    }
 
     void handleUserInput(float deltaTime) {
         const bool *key_states = SDL_GetKeyboardState(nullptr);
@@ -37,6 +39,4 @@ public:
        };
 
     
-    
-
 
