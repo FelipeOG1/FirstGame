@@ -14,8 +14,14 @@ private:
         {"player_idle", Action::IDLE},
         {"player_jump", Action::JUMP}
     };
+    std::unordered_map<std::string, Action> enemyConfigMap = {
+        {"enemy_default", Action::IDLE},
+        {"enemy_spinner", Action::ATTACK}
+    };
 
     std::unordered_map<Action, Animation> playerAnimations;
+    std::unordered_map<Action, Animation> enemyAnimations;
+
 
 public:
     void loadPlayerResources(SDL_Renderer *renderer) {
@@ -31,7 +37,25 @@ public:
         }
     }
 
+    void loadEnemyResources(SDL_Renderer *renderer) {
+        AnimationLoader loader;
+        loader.loadAnimations(
+            "data/enemyAnimations",
+            enemyConfigMap,
+            enemyAnimations 
+        );
+        for (auto& [action, animation]: enemyAnimations) {
+            animation.loadTexture(renderer);
+        }
+    }
+
+
+
     const std::unordered_map<Action, Animation>&getPlayerAnimations() const {
         return playerAnimations;
     }
+    const std::unordered_map<Action, Animation>&getEnemyAnimations() const {
+        return enemyAnimations;
+    }
+
 };
