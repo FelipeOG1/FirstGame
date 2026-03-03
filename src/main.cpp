@@ -6,6 +6,7 @@
 #include "types.h"
 #include "resource_manager.h"
 #include "player.h"
+#include "enemy.h"
 
 struct SDLState {
     SDL_Window* window;
@@ -24,24 +25,26 @@ int main(int argc, char* argv[]) {
     initState(&state);
     ResourceManager resourceManager;
     resourceManager.loadPlayerResources(state.renderer);
+    resourceManager.loadEnemyResources(state.renderer);
     Player robot(resourceManager.getPlayerAnimations());
-    
+    Enemy spider(resourceManager.getEnemyAnimations());
+    std::cout << spider.getCurrentSpriteSheet() << std::endl;
+    spider.setAction(Action::ATTACK);
+    std::cout << spider.getCurrentSpriteSheet() << std::endl;
 
-    
     uint64_t prevTime = SDL_GetTicks();
     bool running = true;
 
     const bool *key_states = SDL_GetKeyboardState(nullptr);
-    
-    robot.setStartingPosition(0, state.logH - robot.getHeight());
-    
+
+
     while (running) {
         uint64_t currTime = SDL_GetTicks();
 
         float deltaTime = (currTime - prevTime) / 1000.0f;
 
         robot.update(deltaTime);
-
+        spider.update(deltaTime);
         SDL_Event e { 0 };
         while (SDL_PollEvent(&e)) {
 
@@ -54,22 +57,12 @@ int main(int argc, char* argv[]) {
 
         }
 
-
-        if (key_states[SDL_SCANCODE_D]) {
-            robot.MoveRight(deltaTime);
-        }
-
-        if (key_states[SDL_SCANCODE_A]) {
-            robot.MoveLeft(deltaTime);
-        }
-        if (key_states[SDL_SCANCODE_SPACE]) {
-            robot.jump(deltaTime);
-        }
-        
-        
+        robot.handleUserInput(deltaTime);
+       
         SDL_SetRenderDrawColor(state.renderer, 20, 10, 30, 255);
         SDL_RenderClear(state.renderer);
         robot.draw(state.renderer);
+        spider.draw(state.renderer);
         SDL_RenderPresent(state.renderer);
         
         prevTime = currTime;

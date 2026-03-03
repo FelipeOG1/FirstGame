@@ -1,79 +1,42 @@
 #pragma once
-#include "animation.h"
-#include <vector>
-#include <unordered_map>
-#include "animationInstance.h"
+#include "game_object.h"
 #include <SDL3/SDL.h>
-#include <SDL3_image/SDL_image.h>
-#include <glm/glm.hpp>
 
-
-class GameObject{
-
-protected:
-    const std::unordered_map<Action, Animation>& animations;
-    AnimationInstance currentAnimation;
-    Action currentAction = Action::IDLE;
-    glm::vec2 position{ 0.0f }, aceleration { 0.0f }, velocity {0.0f}, size {0.0f};
-    float direction{ 1 };
+class Player : public GameObject {
     
 public:
-    GameObject(const std::unordered_map<Action, Animation>& anims)
-        : animations(anims)
+    Player(const std::unordered_map<Action, Animation>& anims) 
+        : GameObject(anims) 
     {
-        if (!animations.count(Action::IDLE))
-            throw std::runtime_error("Falta animación IDLE");
+        this->position = glm::vec2(0.0f, 0.0f); 
+        this->size = glm::vec2(100.0f, 100.0f );     
+        this->velocity = glm::vec2(200.0f, 0.0f);      }
+
+    void handleUserInput(float deltaTime) {
+        const bool *key_states = SDL_GetKeyboardState(nullptr);
+        float moving = 0.0f;
         
-        setAction(Action::IDLE);
-        currentAnimation.setAnimation(&animations.at(currentAction));
-    }
+        if (key_states[SDL_SCANCODE_D]) moving += 1.0f;
+        if (key_states[SDL_SCANCODE_A]) moving -= 1.0f;
 
-    void setAction(Action newAction) {
-        if (currentAction != newAction) {
+        
+        if (moving != 0.0f) {
+            setAction(Action::MOVE);
+            this->direction = moving; 
+            this->position.x += moving * this->velocity.x * deltaTime;
+        } 
+        else {
+            setAction(Action::IDLE);
+        }
 
-            if (!animations.count(newAction))
-                throw std::runtime_error("Animación no encontrada");
-
-            currentAction = newAction;
-            currentAnimation.setAnimation(&animations.at(currentAction));
+        if (key_states[SDL_SCANCODE_SPACE]) {
+            setAction(Action::JUMP);
         }
     }
-   
 
-    virtual void update(float deltaTime) {
-        currentAnimation.step(deltaTime);
-    }
+       };
 
-    const Frame& getCurrentFrame() const {
-        return currentAnimation.getCurrentFrame();
-    }
+    
+    
 
-    const std::string& getCurrentSpriteSheet() const {
-        return currentAnimation.getSpriteSheet();
-    }
 
-    Action getCurrentAction() const {
-        return currentAction;
-    }
-
-    void draw(SDL_Renderer *renderer) {
-        const Frame& f = getCurrentFrame();
-        SDL_Texture* tex = currentAnimation.getTexture();
-        if (!tex) return;
-
-        SDL_FRect src = { (float)f.x, (float)f.y, (float)f.w, (float)f.h };
-        
-        SDL_FRect dst = { 
-        this->position.x,          
-        this->position.y,                  
-        this->size.x, 
-        this->size.y
-        };
-
-        SDL_FlipMode flip = direction == -1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
-        SDL_RenderTextureRotated(renderer, tex, &src, &dst, 0.0, nullptr, flip);
-    };
-
-    virtual ~GameObject() = default;
- 
-};   
