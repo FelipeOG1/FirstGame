@@ -9,5 +9,6 @@ enum class Action {
     MOVE,
     ATTACK,
     HURT,
-    JUMP
+    JUMP,
+    RUNSHOT
 };

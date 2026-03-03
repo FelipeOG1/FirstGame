@@ -1,0 +1,44 @@
+{"frames": [
+
+{
+	"filename": "player-stand-1.png",
+	"frame": {"x":1,"y":1,"w":34,"h":39},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":22,"y":26,"w":34,"h":39},
+	"sourceSize": {"w":80,"h":80}
+},
+{
+	"filename": "player-stand-2.png",
+	"frame": {"x":1,"y":42,"w":34,"h":38},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":22,"y":27,"w":34,"h":38},
+	"sourceSize": {"w":80,"h":80}
+},
+{
+	"filename": "player-stand-3.png",
+	"frame": {"x":1,"y":82,"w":34,"h":37},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":22,"y":28,"w":34,"h":37},
+	"sourceSize": {"w":80,"h":80}
+},
+{
+	"filename": "player-stand-4.png",
+	"frame": {"x":1,"y":42,"w":34,"h":38},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":22,"y":27,"w":34,"h":38},
+	"sourceSize": {"w":80,"h":80}
+}],
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "player_stand.png",
+	"format": "RGBA8888",
+	"size": {"w":36,"h":120},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:dab4660752743d75873c26e9043a229d:05fe8e3cdb5c27b33eeddcb3ff6f1d52:b0a89830ea3ff1b9ae436f84a750dfeb$"
+}
+}

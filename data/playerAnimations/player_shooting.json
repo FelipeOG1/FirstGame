@@ -1,0 +1,36 @@
+{"frames": [
+
+{
+	"filename": "01.png",
+	"frame": {"x":1,"y":1,"w":28,"h":38},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":27,"w":28,"h":38},
+	"sourceSize": {"w":80,"h":80}
+},
+{
+	"filename": "02.png",
+	"frame": {"x":1,"y":41,"w":28,"h":38},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":27,"w":28,"h":38},
+	"sourceSize": {"w":80,"h":80}
+},
+{
+	"filename": "03.png",
+	"frame": {"x":1,"y":81,"w":28,"h":38},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":27,"w":28,"h":38},
+	"sourceSize": {"w":80,"h":80}
+}],
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "player_shooting.png",
+	"format": "RGBA8888",
+	"size": {"w":30,"h":120},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:f38fb56170b79de6c1891d9aa9207df2:f1d6316b5c880c687de3fa241555f8bd:d772b6e9fbd222c78f1290716fd3bb80$"
+}
+}

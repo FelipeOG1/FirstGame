@@ -9,10 +9,11 @@ class ResourceManager {
 private:
 
     std::unordered_map<std::string, Action> playerConfigMap = {
-        {"player_run_shot", Action::ATTACK},
+        {"player_run_shot", Action::RUNSHOT},
         {"player_run",  Action::MOVE},
-        {"player_idle", Action::IDLE},
-        {"player_jump", Action::JUMP}
+        {"player_stand", Action::IDLE},
+        {"player_jump", Action::JUMP},
+        {"player_shooting", Action::ATTACK}
     };
     std::unordered_map<std::string, Action> enemyConfigMap = {
         {"enemy_default", Action::IDLE},

@@ -16,7 +16,6 @@ protected:
     Action currentAction = Action::IDLE;
     glm::vec2 position{ 0.0f }, aceleration { 0.0f }, velocity {0.0f}, size {0.0f};
     float direction{ 1 };
-
     float scale{ 1 };
     
 public:
@@ -26,13 +25,12 @@ public:
         if (!animations.count(Action::IDLE))
             throw std::runtime_error("Falta animación IDLE");
         
-        setAction(Action::IDLE);
+        setAction(currentAction);
         currentAnimation.setAnimation(&animations.at(currentAction));
     }
 
     void setAction(Action newAction) {
         if (currentAction != newAction) {
-
             if (!animations.count(newAction))
                 throw std::runtime_error("Animación no encontrada");
 
@@ -61,8 +59,6 @@ public:
     void draw(SDL_Renderer *renderer) {
         const Frame& f = getCurrentFrame();
         SDL_Texture* tex = currentAnimation.getTexture();
-        glm::vec2 hitboxScale{ 0.5f, 0.7f }; // El hitbox será el 50% del ancho y 70% del alto
-        glm::vec2 hitboxOffset{ 20.0f, 10.0f }; // Para centrarlo si
         if (!tex) return;
        
 
@@ -80,8 +76,8 @@ public:
         float(f.h) * this->scale,
         };
         
-        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); 
-        SDL_RenderRect(renderer, &hitbox);
+        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);//GREEN
+        SDL_RenderRect(renderer, &hitbox);//render heatbox
 
 
         SDL_FRect src = { (float)f.x, (float)f.y, (float)f.w, (float)f.h };
