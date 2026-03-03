@@ -52,7 +52,7 @@ public:
         return timer.isTimeout();
     }
 
-    SDL_Texture *currentTexture() const {
+    SDL_Texture *getTexture() const {
         return animation->getTexture();
     }
 

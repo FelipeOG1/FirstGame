@@ -5,26 +5,20 @@
 #include "animationInstance.h"
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
+#include <glm/glm.hpp>
 
-class Player {
 
-private:
+class GameObject{
+
+protected:
     const std::unordered_map<Action, Animation>& animations;
     AnimationInstance currentAnimation;
     Action currentAction = Action::IDLE;
-    bool facingLeft = false;
-    float x = 0.0;
-    float y = 0.0;
-    
-    float w = 100.0;
-    float h = 100.0;
+    glm::vec2 position{ 0.0f }, aceleration { 0.0f }, velocity {0.0f}, size {0.0f};
+    float direction{ 1 };
     
 public:
-
-    
-    const float velocity = 200.0;
-
-    Player(const std::unordered_map<Action, Animation>& anims)
+    GameObject(const std::unordered_map<Action, Animation>& anims)
         : animations(anims)
     {
         if (!animations.count(Action::IDLE))
@@ -44,13 +38,9 @@ public:
             currentAnimation.setAnimation(&animations.at(currentAction));
         }
     }
-    void setStartingPosition(float x, float y) {
-        this->x = x;
-        this->y = y;
-    }
+   
 
-
-    void update(float deltaTime) {
+    virtual void update(float deltaTime) {
         currentAnimation.step(deltaTime);
     }
 
@@ -66,52 +56,24 @@ public:
         return currentAction;
     }
 
-   
     void draw(SDL_Renderer *renderer) {
         const Frame& f = getCurrentFrame();
-        SDL_Texture* tex = currentAnimation.currentTexture();
+        SDL_Texture* tex = currentAnimation.getTexture();
         if (!tex) return;
 
         SDL_FRect src = { (float)f.x, (float)f.y, (float)f.w, (float)f.h };
         
         SDL_FRect dst = { 
-        this->x,          
-        this->y,                  
-        this->w, 
-        this->h
+        this->position.x,          
+        this->position.y,                  
+        this->size.x, 
+        this->size.y
         };
 
-        SDL_FlipMode flip = facingLeft ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+        SDL_FlipMode flip = direction == -1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
         SDL_RenderTextureRotated(renderer, tex, &src, &dst, 0.0, nullptr, flip);
     };
 
-
-    void MoveRight(float deltaTime) {
-        setAction(Action::MOVE);
-        facingLeft = false;
-        x += velocity * deltaTime;
-    }
-
-   
-    void MoveLeft(float deltatime) {
-        setAction(Action::MOVE);
-        facingLeft = true;
-        x -= velocity * deltatime;
-
-    }
-
-    void jump(float deltatime) {
-        setAction(Action::JUMP);
-        
-        y -= velocity * deltatime;
-
-    }
-
-
-    float getHeight() const { return h; }
-        
-         
-    };
-
-        
-    
+    virtual ~GameObject() = default;
+ 
+};   

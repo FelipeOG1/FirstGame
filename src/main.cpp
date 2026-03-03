@@ -54,7 +54,6 @@ int main(int argc, char* argv[]) {
 
         }
 
-        
 
         if (key_states[SDL_SCANCODE_D]) {
             robot.MoveRight(deltaTime);
@@ -63,7 +62,6 @@ int main(int argc, char* argv[]) {
         if (key_states[SDL_SCANCODE_A]) {
             robot.MoveLeft(deltaTime);
         }
-
         if (key_states[SDL_SCANCODE_SPACE]) {
             robot.jump(deltaTime);
         }
