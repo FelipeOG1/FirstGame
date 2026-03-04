@@ -7,7 +7,8 @@
 #include "resource_manager.h"
 #include "player.h"
 #include "enemy.h"
-
+#include "vector"
+#include "memory"
 struct SDLState {
     SDL_Window* window;
     SDL_Renderer* renderer;
@@ -20,14 +21,17 @@ int initState(SDLState* state);
 int show_error_and_exit(SDLState* state);
 
 int main(int argc, char* argv[]) {
-
+    std::vector<std::unique_ptr<GameObject>> gameObjects;
     SDLState state;   
     initState(&state);
     ResourceManager resourceManager;
     resourceManager.loadPlayerResources(state.renderer);
     resourceManager.loadEnemyResources(state.renderer);
+    
     Player robot(resourceManager.getPlayerAnimations());
     Enemy spider(resourceManager.getEnemyAnimations());
+    
+    
     uint64_t prevTime = SDL_GetTicks();
     bool running = true;
     const bool *key_states = SDL_GetKeyboardState(nullptr);

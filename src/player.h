@@ -14,9 +14,7 @@ public:
         this->size = glm::vec2(100.0f, 100.0f );     
         this->velocity = glm::vec2(200.0f, 0.0f);      
         this->scale = 1.3;
-
-        setDurationAnimation(Action::ATTACK, 1.0f);
-
+        setDurationAnimation(Action::ATTACK, 0.2);
 
     }
 
