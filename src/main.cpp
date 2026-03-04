@@ -43,18 +43,36 @@ int main(int argc, char* argv[]) {
         spider.update(deltaTime);
         SDL_Event e { 0 };
         while (SDL_PollEvent(&e)) {
-
             
             if (e.type == SDL_EVENT_QUIT) running = false;
             if (e.type == SDL_EVENT_WINDOW_RESIZED) {
                 state.w = e.window.data1;
                 state.h = e.window.data2;
             }
+            if (e.type == SDL_EVENT_KEY_DOWN && !e.key.repeat) {
+                if (e.key.scancode == SDL_SCANCODE_J) {
+                    if (robot.is_moving()){
+                        robot.setAction(Action::RUNSHOT);
+                    } else {
+                        robot.setAction(Action::ATTACK);
+                    }              
+                }
+            }
+
+            if (e.type == SDL_EVENT_KEY_UP) {
+                if (e.key.scancode == SDL_SCANCODE_J) {
+                    if (robot.is_moving()) {
+                        robot.setAction(Action::MOVE);
+                        
+                    } else {
+                        robot.setAction(Action::IDLE);
+                    }
+                }
+            }
 
         }
 
         robot.handleUserInput(deltaTime);
-       
         SDL_SetRenderDrawColor(state.renderer, 20, 10, 30, 255);
         SDL_RenderClear(state.renderer);
         robot.draw(state.renderer);
