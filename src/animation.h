@@ -8,11 +8,10 @@ class Animation {
 
 private:
     SDL_Texture* texture = nullptr;
-
 public:
-    float duration = 1.0f;
     std::string spriteSheetPath;
     std::vector<Frame> frames;
+    float duration = 1.0f;
     Animation() = default;
 
 
@@ -33,6 +32,10 @@ public:
         return texture;
     }
 
+    
+    void setDuration (float duration) {
+        this->duration = duration;
+    }
 
     ~Animation() {
         if (texture) SDL_DestroyTexture(texture);

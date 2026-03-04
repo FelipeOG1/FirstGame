@@ -6,14 +6,14 @@
 class AnimationInstance {
 
 private:
-    const Animation* animation = nullptr;  
+    Animation* animation = nullptr;  
     Timer timer;
 
 public:
 
     AnimationInstance() = default;
 
-    void setAnimation(const Animation* anim) {
+    void setAnimation(Animation* anim) {
         if (!anim)
             throw std::runtime_error("Animation nula");
 
@@ -21,6 +21,10 @@ public:
         timer.setLength(anim->duration);
     }
 
+    void setDuration(float duration) {
+        animation->setDuration(duration);
+        timer.setLength(duration);
+    }
 
     void step(float deltaTime) {
         if (!animation) return;

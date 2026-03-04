@@ -5,7 +5,7 @@
 class Enemy : public GameObject {
     
 public:
-    Enemy(const std::unordered_map<Action, Animation>& anims) 
+    Enemy(std::unordered_map<Action, Animation>& anims) 
         : GameObject(anims) 
     {
         this->position = glm::vec2(100.0f, 30.0f); 

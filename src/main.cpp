@@ -30,7 +30,6 @@ int main(int argc, char* argv[]) {
     Enemy spider(resourceManager.getEnemyAnimations());
     uint64_t prevTime = SDL_GetTicks();
     bool running = true;
-
     const bool *key_states = SDL_GetKeyboardState(nullptr);
 
 

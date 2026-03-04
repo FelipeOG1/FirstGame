@@ -11,7 +11,7 @@
 class GameObject{
 
 protected:
-    const std::unordered_map<Action, Animation>& animations;
+    std::unordered_map<Action, Animation>& animations;
     AnimationInstance currentAnimation;
     Action currentAction = Action::IDLE;
     glm::vec2 position{ 0.0f }, aceleration { 0.0f }, velocity {0.0f}, size {0.0f};
@@ -19,7 +19,7 @@ protected:
     float scale{ 1 };
     
 public:
-    GameObject(const std::unordered_map<Action, Animation>& anims)
+    GameObject(std::unordered_map<Action, Animation>& anims)
         : animations(anims)
     {
         if (!animations.count(Action::IDLE))
@@ -37,6 +37,22 @@ public:
             currentAction = newAction;
             currentAnimation.setAnimation(&animations.at(currentAction));
         }
+    }
+
+    void setDurationAnimation(Action action, float duration) {
+        try {
+            Animation& animation = animations.at(action); 
+            animation.setDuration(duration);
+            if (currentAction == action) {
+            currentAnimation.setAnimation(&animation);
+            }
+            
+        } catch(const std::out_of_range& e) {
+            std::cerr << "Llave inválida: " << e.what() << std::endl;
+        } 
+    
+       
+        
     }
    
 

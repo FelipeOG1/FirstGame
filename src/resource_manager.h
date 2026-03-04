@@ -52,10 +52,10 @@ public:
 
 
 
-    const std::unordered_map<Action, Animation>&getPlayerAnimations() const {
+    std::unordered_map<Action, Animation>&getPlayerAnimations()  {
         return playerAnimations;
     }
-    const std::unordered_map<Action, Animation>&getEnemyAnimations() const {
+    std::unordered_map<Action, Animation>&getEnemyAnimations()  {
         return enemyAnimations;
     }
 
