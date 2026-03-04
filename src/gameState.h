@@ -7,17 +7,14 @@
 #include "enemy.h"
 
 class GameState {
-
-    
+   
 private:
     std::vector<std::vector<std::unique_ptr<GameObject>>> layer;
     
     enum class LayerIndex {
         PLAYER_INDEX,
         ENEMY_INDEX,
-        TILES_INDEX,
-        
-        
+        TILES_INDEX,   
     };
     
     int _getCorrespondingIndex(const GameObject* entity) {
@@ -38,6 +35,14 @@ public:
     void addEntity (std::unique_ptr<GameObject> entity) {
         int index = _getCorrespondingIndex(entity.get());
         layer[index].push_back(std::move(entity));
+    
+    }
+
+    void update(float deltatime) {
+        for (auto& player : layer[static_cast<int>(LayerIndex::PLAYER_INDEX)]) {
+            player->update(deltatime);
+        }
+
     }
 
 };

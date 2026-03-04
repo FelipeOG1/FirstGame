@@ -9,6 +9,7 @@
 #include "enemy.h"
 #include "vector"
 #include "memory"
+#include  "gameState.h" 
 struct SDLState {
     SDL_Window* window;
     SDL_Renderer* renderer;
@@ -21,29 +22,28 @@ int initState(SDLState* state);
 int show_error_and_exit(SDLState* state);
 
 int main(int argc, char* argv[]) {
-    std::vector<std::unique_ptr<GameObject>> gameObjects;
+    GameState gameState;
     SDLState state;   
-    initState(&state);
     ResourceManager resourceManager;
     resourceManager.loadPlayerResources(state.renderer);
     resourceManager.loadEnemyResources(state.renderer);
     
-    Player robot(resourceManager.getPlayerAnimations());
-    Enemy spider(resourceManager.getEnemyAnimations());
-    
-    
+    auto robot = std::make_unique<Player>(resourceManager.getPlayerAnimations());
+    auto spider = std::make_unique<Enemy>(resourceManager.getEnemyAnimations());   
+    gameState.addEntity(std::move(robot));
+    gameState.addEntity(std::move(spider));
+    initState(&state);
     uint64_t prevTime = SDL_GetTicks();
     bool running = true;
+
     const bool *key_states = SDL_GetKeyboardState(nullptr);
-
-
     while (running) {
         uint64_t currTime = SDL_GetTicks();
 
         float deltaTime = (currTime - prevTime) / 1000.0f;
 
-        robot.update(deltaTime);
-        spider.update(deltaTime);
+        robot->update(deltaTime);
+        spider->update(deltaTime);
         SDL_Event e { 0 };
         while (SDL_PollEvent(&e)) {
             
@@ -54,32 +54,32 @@ int main(int argc, char* argv[]) {
             }
             if (e.type == SDL_EVENT_KEY_DOWN && !e.key.repeat) {
                 if (e.key.scancode == SDL_SCANCODE_J) {
-                    if (robot.is_moving()){
-                        robot.setAction(Action::RUNSHOT);
+                    if (robot->is_moving()){
+                        robot->setAction(Action::RUNSHOT);
                     } else {
-                        robot.setAction(Action::ATTACK);
+                        robot->setAction(Action::ATTACK);
                     }              
                 }
             }
 
             if (e.type == SDL_EVENT_KEY_UP) {
                 if (e.key.scancode == SDL_SCANCODE_J) {
-                    if (robot.is_moving()) {
-                        robot.setAction(Action::MOVE);
+                    if (robot->is_moving()) {
+                        robot->setAction(Action::MOVE);
                         
                     } else {
-                        robot.setAction(Action::IDLE);
+                        robot->setAction(Action::IDLE);
                     }
                 }
             }
 
         }
 
-        robot.handleUserInput(deltaTime);
+        robot->handleUserInput(deltaTime);
         SDL_SetRenderDrawColor(state.renderer, 20, 10, 30, 255);
         SDL_RenderClear(state.renderer);
-        robot.draw(state.renderer);
-        spider.draw(state.renderer);
+        robot->draw(state.renderer);
+        spider->draw(state.renderer);
         SDL_RenderPresent(state.renderer);
         
         prevTime = currTime;
